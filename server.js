@@ -3,11 +3,16 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const morgan = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+
 
 // Files Imports
 const connectDB = require('./config/db');
-const testRoutes = require('./routes/testRoutes')
+
+// Routes Imports
+const testRoutes = require('./routes/testRoutes');
+const authRoutes = require('./routes/authRoutes');
+const { errorMiddleware } = require('./moddlewares/errorMiddleware');
 
 // Dot ENV config
 dotenv.config();
@@ -25,12 +30,17 @@ app.use(cors());
 // Morgan config
 app.use(morgan('dev'));
 
-// ============================= routes ================
+
 // app.get('/', (req,res) =>{
 //     res.send("<h1>Welcome to Job Portal</h1>")
 // });
 
-app.use('/api/v1/test', testRoutes)
+// Routes
+app.use('/api/v1/test', testRoutes);
+app.use('/api/v1/auth', authRoutes);
+
+//validation middleware
+app.use(errorMiddleware);
 
 // PORT
 const PORT = process.env.PORT || 8080
